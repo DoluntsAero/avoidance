@@ -1,0 +1,7 @@
+<launch>
+
+    <node pkg="tf2_ros" type="static_transform_publisher" name="stereo_frame" args="0 0 0 -1.5707963 0 -1.5707963 map stereo_optical"/>
+    <node pkg="tf2_ros" type="static_transform_publisher" name="left_camera_frame" args="0 0.06 0 0 0 0 stereo_optical left_camera_optical "/>
+    <node pkg="tf2_ros" type="static_transform_publisher" name="right_camera_frame" args="0 -0.06 0 0 0 0 stereo_optical right_camera_optical "/>
+
+</launch>
