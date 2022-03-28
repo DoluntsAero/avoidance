@@ -1,0 +1,23 @@
+<package format="2">
+  <name>disparity_visualize</name>
+  <version>1.0.0</version>
+  <description>Visualize stereo_msgs/DisparityImage as RGB sensor_msgs/Image topic</description>
+  <maintainer email="fujimoto@aisl.cs.tut.ac.jp">Hironori Fujimoto</maintainer>
+  <license>BSD</license>
+  <url>https://github.com/ActiveIntelligentSystemsLab/disparity_visualize</url>
+
+  <export>
+    <nodelet plugin="${prefix}/nodelet_plugins.xml" />
+  </export>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <depend>cv_bridge</depend>
+  <depend>image_transport</depend>
+  <depend>nodelet</depend>
+  <depend>rosconsole</depend>
+  <depend>roscpp</depend>
+
+  <build_depend>sensor_msgs</build_depend>
+  <build_depend>stereo_msgs</build_depend>
+</package>

@@ -1,0 +1,59 @@
+<launch>
+    <group ns="stereo">
+        <arg name="lcam_dev" default="/dev/video12"/>
+        <arg name="rcam_dev" default="/dev/video10"/>
+            <arg name="res_w" default="640"/>
+    <arg name="res_h" default="480"/>
+
+        <arg name="sync" default="true"/>
+        <arg name="stereo_alg" default="0"/>
+        <arg name="correlation_window" default="11"/>
+        <arg name="disparity_range" default="48.0"/>
+        <arg name="uniqueness_ratio" default="0.0"/>
+        <arg name="speckle_size" default="15.0"/>
+        <arg name="speckle_range" default="14.0"/>
+        
+        <arg name="publish_tf" default="true" />
+        
+        <node pkg="tf" type="static_transform_publisher" name="tf_depth_camera" 
+                   args="0 0 0 0 0 0 map camera_link 10"/>
+                   
+        <node name="left" pkg="usb_cam" type="usb_cam_node" output="screen" >
+            <param name="video_device" value="$(arg lcam_dev)"/>
+            <param name="image_width" value="$(arg res_w)" />
+            <param name="image_height" value="$(arg res_h)" />
+            <param name="framerate" value="40" /> 
+            <param name="io_method" value="mmap"/>
+            <param name="pixel_format" value="mjpeg" />
+            <param name="camera_frame_id" value="camera_link"/>
+            <param name="camera_name" value="right" />
+        </node>
+
+        <node name="right" pkg="usb_cam" type="usb_cam_node" output="screen" >
+            <param name="video_device" value="$(arg rcam_dev)"/>
+            <param name="image_width" value="$(arg res_w)" />
+            <param name="image_height" value="$(arg res_h)" />
+            <param name="framerate" value="40" /> 
+            <param name="io_method" value="mmap"/>
+            <param name="pixel_format" value="mjpeg" />
+            <param name="camera_frame_id" value="camera_link"/>
+            <param name="camera_name" value="left" />
+        </node>
+
+        <node pkg="stereo_image_proc" type="stereo_image_proc" name="stereo_image_proc">
+            <param name="approximate_sync" type="bool" value="$(arg sync)" />
+            <param name="stereo_algorithm" type="double" value="$(arg stereo_alg)" />
+            <param name="correlation_window_size" type="double" value="$(arg correlation_window)" />
+            <param name="disparity_range" type="double" value="$(arg disparity_range)" />
+            <param name="uniqueness_ratio" type="double" value="$(arg uniqueness_ratio)" />
+            <param name="speckle_size" type="double" value="$(arg speckle_size)" />
+            <param name="speckle_range" type="double" value="$(arg speckle_range)" />
+        </node>
+
+        <node pkg="disparity_to_point_cloud" type="disparity_to_point_cloud_node" name="disparity_to_point_cloud" output="screen">
+            <remap to="/fused_depth_0" from="/disparity"/>
+            <remap to="/omi_cam/point_cloud" from="/point_cloud"/>
+        </node>
+        
+  </group>  
+</launch>

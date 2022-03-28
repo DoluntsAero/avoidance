@@ -1,0 +1,18 @@
+<launch>
+    <arg name="pointcloud_topics" default="[/stereo/points2]" />
+
+  <!-- Launch PX4 and mavros -->
+  <include file="$(find avoidance)/launch/avoidance_sitl_stereo.launch" >
+    <arg name="pointcloud_topics" value="$(arg pointcloud_topics)"/>
+  </include>
+
+    <!-- Global planner -->
+    <include file="$(find global_planner)/launch/global_planner_octomap.launch" >
+        <arg name="start_pos_x" value="0" />
+        <arg name="start_pos_y" value="0" />
+        <arg name="start_pos_z" value="0" />
+        <arg name="pointcloud_topics" value="$(arg pointcloud_topics)"/>
+    </include>
+
+  
+</launch>
