@@ -1,0 +1,38 @@
+<launch>
+
+    <arg name="lcam_dev" default="/dev/video10"/>
+    <arg name="rcam_dev" default="/dev/video12"/>
+    <arg name="tf_prefix" default="" />
+    <arg name="publish_tf" default="true" />
+
+    <node name="left" ns="stereo" pkg="usb_cam" type="usb_cam_node" output="screen" >
+        <param name="video_device" value="$(arg lcam_dev)"/>
+        <param name="image_width" value="640"/>
+        <param name="image_height" value="480"/>
+        <param name="framerate" value="25" /> 
+        <param name="io_method" value="mmap"/>
+        <param name="pixel_format" value="yuyv" />
+        <param name="camera_frame_id" value="left_camera_optical"/>
+        <param name="camera_name" value="left" />
+    </node>
+
+	<node name="right" ns="stereo" pkg="usb_cam" type="usb_cam_node" output="screen" >
+        <param name="video_device" value="$(arg rcam_dev)"/>
+        <param name="image_width" value="640"/>
+        <param name="image_height" value="480"/>
+        <param name="framerate" value="25" /> 
+        <param name="io_method" value="mmap"/>
+        <param name="pixel_format" value="yuyv" />
+        <param name="camera_frame_id" value="right_camera_optical"/>
+        <param name="camera_name" value="right" />
+    </node>
+
+    <!-- Start a nodelet manager; the name must be unqualified here -->
+  <node pkg="nodelet" type="nodelet" name="pipeline" args="manager" />
+
+  <!-- Include the stereo_image_proc.launch file and pass in a qualified manager name -->
+  <include file="$(find avoidance)/launch/stereo_proc.launch" ns="stereo">
+    <arg name="manager" value="/pipeline" />
+  </include>
+  
+</launch>

@@ -1,7 +1,9 @@
 <launch>
+    <arg name="pi/2" value="1.5707963267948966" />
+    <arg name="lens_dist" value="0.045" /> <!--Distanse between frame and camera centers (left=right) -->
 
-    <node pkg="tf2_ros" type="static_transform_publisher" name="stereo_frame" args="0 0 0 -1.5707963 0 -1.5707963 map stereo_optical"/>
-    <node pkg="tf2_ros" type="static_transform_publisher" name="left_camera_frame" args="0 0.06 0 0 0 0 stereo_optical left_camera_optical "/>
-    <node pkg="tf2_ros" type="static_transform_publisher" name="right_camera_frame" args="0 -0.06 0 0 0 0 stereo_optical right_camera_optical "/>
+    <node pkg="tf2_ros" type="static_transform_publisher" name="stereo_frame" args="0 0 0 -$(arg pi/2) 0 -$(arg pi/2) map camera_link"/>
+    <node pkg="tf2_ros" type="static_transform_publisher" name="left_camera_tf" args="0 $(arg lens_dist) 0 0 0 0 camera_link left_camera_optical "/>
+    <node pkg="tf2_ros" type="static_transform_publisher" name="right_camera_tf" args="0 -$(arg lens_dist) 0 0 0 0 camera_link right_camera_optical "/>
 
 </launch>
